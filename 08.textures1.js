@@ -1,5 +1,4 @@
 const vertexShaderSrc = `#version 300 es
-#pragma vscode_glsllint_stage: vert
 in vec4 aPosition;
 in vec2 aTexCoord;
 out vec2 vTexCoord;
@@ -10,7 +9,6 @@ void main()
 }`;
 
 const fragmentShaderSrc = `#version 300 es
-#pragma vscode_glsllint_stage: frag
 precision mediump float;
 in vec2 vTexCoord;
 uniform sampler2D uSampler;
@@ -64,10 +62,6 @@ const pixels = new Uint8Array([
 	230,190,255,		154,99,36,			255,250,200,		0,0,0,
 ]);
 
-const pixelBuffer = gl.createBuffer();
-gl.bindBuffer(gl.PIXEL_UNPACK_BUFFER, pixelBuffer);
-gl.bufferData(gl.PIXEL_UNPACK_BUFFER, pixels, gl.STATIC_DRAW);
-
 const vertexBuffer = gl.createBuffer();
 gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
 gl.bufferData(gl.ARRAY_BUFFER, vertexBufferData, gl.STATIC_DRAW);
@@ -81,6 +75,10 @@ gl.bufferData(gl.ARRAY_BUFFER, texCoordBufferData, gl.STATIC_DRAW);
 const texLoc = gl.getAttribLocation(program, 'aTexCoord')
 gl.vertexAttribPointer(texLoc, 2, gl.FLOAT, false, 0,0);
 gl.enableVertexAttribArray(texLoc);
+
+const pixelBuffer = gl.createBuffer();
+gl.bindBuffer(gl.PIXEL_UNPACK_BUFFER, pixelBuffer);
+gl.bufferData(gl.PIXEL_UNPACK_BUFFER, pixels, gl.STATIC_DRAW);
 
 const textureSlot = 1;
 gl.activeTexture(gl.TEXTURE0 + textureSlot);
