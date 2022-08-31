@@ -1,3 +1,5 @@
+// This is a reduced version of the original.
+
 const vertexShaderSrc = `#version 300 es
 in vec4 aPosition;
 in vec2 aTexCoord;
