@@ -86,7 +86,14 @@ gl.uniform1i(gl.getUniformLocation(program, 'uSampler'), textureSlot);
 
 const texture = gl.createTexture();
 gl.bindTexture(gl.TEXTURE_2D, texture);
-gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, 4,4, 0, gl.RGB, gl.UNSIGNED_BYTE, 0);
+gl.texImage2D(gl.TEXTURE_2D,  // bind target
+	          0,  // mipmap level
+			  gl.RGB, // format used by the fragment shader
+			  4,4,  // width and height of the source image
+			  0,  // always zero
+			  gl.RGB,  // source format
+			  gl.UNSIGNED_BYTE,
+			  0);  // offset in bytes into the texture pixel array
 
 gl.generateMipmap(gl.TEXTURE_2D);
 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
