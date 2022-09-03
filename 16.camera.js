@@ -130,7 +130,7 @@ gl.uniformMatrix4fv(viewLoc, false, view);
 gl.uniformMatrix4fv(projectionLoc, false, projection);
 
 const draw = () => {
-    requestAnimationFrame(draw);
+    // requestAnimationFrame(draw);
 
     mat4.rotate(model, model, 0.02, [1,1,0]);
     gl.uniformMatrix4fv(modelLoc, false, model);
