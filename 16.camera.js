@@ -1,5 +1,5 @@
 // tslint:disable: no-console
-
+console.log('hello from camera')
 const vertexShaderSrc = `#version 300 es
 #pragma vscode_glsllint_stage: vert
 
@@ -20,20 +20,14 @@ void main()
 
 const fragmentShaderSrc = `#version 300 es
 #pragma vscode_glsllint_stage: frag
-
 precision mediump float;
-
 in vec4 vColor;
-
 out vec4 fragColor;
-
-void main()
-{
+void main() {
     fragColor = vColor;
 }`;
 
 const gl = document.querySelector('canvas').getContext('webgl2');
-
 
 const program = gl.createProgram();
 
@@ -59,46 +53,11 @@ gl.useProgram(program);
 gl.enable(gl.DEPTH_TEST);
 
 const vertexData = new Float32Array([
-    -.5,-.5,-.5,   0,1,1,
-    -.5, .5, .5,   0,1,1,
-    -.5, .5,-.5,   0,1,1,
-    -.5,-.5, .5,   0,1,1,
-    -.5, .5, .5,   0,1,1,
-    -.5,-.5,-.5,   0,1,1,
-
-    .5 ,-.5,-.5,   1,0,1,
-    .5 , .5,-.5,   1,0,1,
-    .5 , .5, .5,   1,0,1,
-    .5 , .5, .5,   1,0,1,
-    .5 ,-.5, .5,   1,0,1,
-    .5 ,-.5,-.5,   1,0,1,
-
-    -.5,-.5,-.5,   0,1,0,
-     .5,-.5,-.5,   0,1,0,
-     .5,-.5, .5,   0,1,0,
-     .5,-.5, .5,   0,1,0,
-    -.5,-.5, .5,   0,1,0,
-    -.5,-.5,-.5,   0,1,0,
-
-    -.5, .5,-.5,   1,1,0,
-     .5, .5, .5,   1,1,0,
-     .5, .5,-.5,   1,1,0,
-    -.5, .5, .5,   1,1,0,
-     .5, .5, .5,   1,1,0,
-    -.5, .5,-.5,   1,1,0,
-
-     .5,-.5,-.5,   0,0,1,
-    -.5,-.5,-.5,   0,0,1,
-     .5, .5,-.5,   0,0,1,
-    -.5, .5,-.5,   0,0,1,
-     .5, .5,-.5,   0,0,1,
-    -.5,-.5,-.5,   0,0,1,
-
-    -.5,-.5, .5,   1,0,0,
-     .5,-.5, .5,   1,0,0,
-     .5, .5, .5,   1,0,0,
-     .5, .5, .5,   1,0,0,
-    -.5, .5, .5,   1,0,0,
+    -.5,-.5, 1.5,   1,0,1,
+     .5,-.5, 1.5,   0,1,0,
+     .5, .5, 1.5,   0,0,1,
+     .5, .5, 1.5,   0,0.6,0,
+    -.5, .5, .5,   0,0,0.7,
     -.5,-.5, .5,   1,0,0,
 ]);
 
@@ -118,23 +77,49 @@ const model = mat4.create();
 const view = mat4.create();
 const projection = mat4.create();
 
-mat4.rotateZ(model, model, .1);
-mat4.scale(model, model, [.8, .8, .8]);
+mat4.lookAt(view, [0,0,-0.0], // eye
+        [0,0,1],   // looking at
+        [0,1,0]);
 
-mat4.lookAt(view, [.6,.6,.6], [0,0,0], [0,1,0]);
+// in z buffering, smaller z wins.
 
-// mat4.perspective(projection, Math.PI / 1.5, gl.canvas.width / gl.canvas.height, .1, 10);
-mat4.ortho(projection, -1,1, -1,1, -1,2);
+//mat4.perspective(projection, Math.PI / 2, 1, 
+persp(projection, Math.PI / 2, 1,   // flips z
+                 .2,   //near
+                 null    //far
+                 );
+console.log('14:', projection[14])
 
 gl.uniformMatrix4fv(viewLoc, false, view);
 gl.uniformMatrix4fv(projectionLoc, false, projection);
 
-const draw = () => {
-    // requestAnimationFrame(draw);
-
     mat4.rotate(model, model, 0.02, [1,1,0]);
     gl.uniformMatrix4fv(modelLoc, false, model);
+    gl.drawArrays(gl.TRIANGLES, 0, 6);
 
-    gl.drawArrays(gl.TRIANGLES, 0, 36);
-};
-draw();
+function persp(out, fovy, aspect, near, far) {
+    const f = 1.0  // / Math.tan(fovy / 2);
+    out[0] = f / aspect;
+    out[1] = 0;
+    out[2] = 0;
+    out[3] = 0;
+    out[4] = 0;
+    out[5] = f;
+    out[6] = 0;
+    out[7] = 0;
+    out[8] = 0;
+    out[9] = 0;
+    out[11] = -1;
+    out[12] = 0;
+    out[13] = 0;
+    out[15] = 0;
+    if (far != null && far !== Infinity) {
+      const nf = 1 / (near - far);
+      out[10] = (far + near) * nf;
+      out[14] = 2 * far * near * nf;
+    } else {
+      out[10] = -1;
+      out[14] = -2 * near;
+    }
+    return out;
+  }
