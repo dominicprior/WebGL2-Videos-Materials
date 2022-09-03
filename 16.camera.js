@@ -1,7 +1,5 @@
 // tslint:disable: no-console
 
-import { mat4 } from 'gl-matrix';
-
 const vertexShaderSrc = `#version 300 es
 #pragma vscode_glsllint_stage: vert
 
