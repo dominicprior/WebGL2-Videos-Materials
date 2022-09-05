@@ -15,7 +15,7 @@ in vec2 vTexCoord;
 uniform sampler2D uSampler;
 out vec4 fragColor;
 void main() {
-  fragColor = texture(uSampler, vTexCoord);
+  fragColor = texture(uSampler, vTexCoord);  // texture is the modern function; texture2D is deprecated
 }`;
 
 const gl = document.querySelector('canvas').getContext('webgl2');
@@ -47,7 +47,7 @@ const texture = twgl.createTexture(gl, {
 	format: gl.RGB
 });
 
-const uniforms = { uSampler: texture }
-twgl.setUniforms(programInfo, uniforms)
+//const uniforms = { uSampler: texture }
+//twgl.setUniforms(programInfo, uniforms)   // no need!
 
 twgl.drawBufferInfo(gl, bufferInfo, gl.TRIANGLE_STRIP)
