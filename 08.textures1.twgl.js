@@ -47,7 +47,4 @@ const texture = twgl.createTexture(gl, {
 	format: gl.RGB
 });
 
-//const uniforms = { uSampler: texture }
-//twgl.setUniforms(programInfo, uniforms)   // no need!
-
 twgl.drawBufferInfo(gl, bufferInfo, gl.TRIANGLE_STRIP)
