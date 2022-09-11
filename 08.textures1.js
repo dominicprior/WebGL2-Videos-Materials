@@ -20,7 +20,10 @@ void main()
     fragColor = texture(uSampler, vTexCoord);
 }`;
 
-const gl = document.querySelector('canvas').getContext('webgl2');
+const gl = document.querySelector('canvas').getContext('webgl2', {
+	antialias: false,  // doesn't seem to slight blurring between the texels
+	depth: false
+  });
 
 const program = gl.createProgram();
 {
@@ -82,9 +85,9 @@ const pixelBuffer = gl.createBuffer();
 gl.bindBuffer(gl.PIXEL_UNPACK_BUFFER, pixelBuffer);
 gl.bufferData(gl.PIXEL_UNPACK_BUFFER, pixels, gl.STATIC_DRAW);
 
-const textureSlot = 1;
-gl.activeTexture(gl.TEXTURE0 + textureSlot);
-gl.uniform1i(gl.getUniformLocation(program, 'uSampler'), textureSlot);
+const textureSlot = 0;
+//gl.activeTexture(gl.TEXTURE0 + textureSlot);                             // doesn't seem to be necessary if textureSlot is zero.
+//gl.uniform1i(gl.getUniformLocation(program, 'uSampler'), textureSlot);   // doesn't seem to be necessary if textureSlot is zero.
 
 const texture = gl.createTexture();
 gl.bindTexture(gl.TEXTURE_2D, texture);
