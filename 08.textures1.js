@@ -81,9 +81,10 @@ const texLoc = gl.getAttribLocation(program, 'aTexCoord')
 gl.vertexAttribPointer(texLoc, 2, gl.FLOAT, false, 0,0);
 gl.enableVertexAttribArray(texLoc);
 
-const pixelBuffer = gl.createBuffer();
-gl.bindBuffer(gl.PIXEL_UNPACK_BUFFER, pixelBuffer);
-gl.bufferData(gl.PIXEL_UNPACK_BUFFER, pixels, gl.STATIC_DRAW);
+//////// we can skip this and just pass 'pixels' directly to gl.texImage2D() ////////
+//const pixelBuffer = gl.createBuffer();
+//gl.bindBuffer(gl.PIXEL_UNPACK_BUFFER, pixelBuffer);
+//gl.bufferData(gl.PIXEL_UNPACK_BUFFER, pixels, gl.STATIC_DRAW);
 
 const textureSlot = 0;
 //gl.activeTexture(gl.TEXTURE0 + textureSlot);                             // doesn't seem to be necessary if textureSlot is zero.
@@ -98,7 +99,7 @@ gl.texImage2D(gl.TEXTURE_2D,  // bind target
 			  0,  // always zero
 			  gl.RGB,  // source format
 			  gl.UNSIGNED_BYTE,
-			  0);  // offset in bytes into the texture pixel array
+			  pixels);  // offset in bytes into the texture pixel array
 
 gl.generateMipmap(gl.TEXTURE_2D);
 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
